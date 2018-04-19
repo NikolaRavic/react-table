@@ -162,7 +162,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       index,
     ];
     [pageRows] = recurseRowsViewIndex(pageRows)
-
+    console.log('ReactTable', pageRows);
     const canPrevious = page > 0
     const canNext = page + 1 < pages
 
@@ -460,6 +460,18 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           </TrComponent>
         </TheadComponent>
       )
+    }
+
+    const renderVisibleRows = (allRows, startIndex = 0, endIndex = allRows.length) => {
+      const visibleRows = [];
+
+      if (allRows.length) {
+        for (let i = startIndex; i <= endIndex; i++) {
+          visibleRows.push(makePageRow(allRows[i], i));
+        }
+      }
+
+      return visibleRows;
     }
 
     const makePageRow = (row, i, path = []) => {
@@ -842,7 +854,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               }}
               {...tBodyProps.rest}
             >
-              {pageRows.map((d, i) => makePageRow(d, i))}
+              {renderVisibleRows(pageRows, 0, 20)}
               {padRows.map(makePadRow)}
             </TbodyComponent>
             {hasColumnFooter ? makeColumnFooters() : null}
